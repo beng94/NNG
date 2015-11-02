@@ -24,14 +24,16 @@ void PrisonerGroup::printgroup(){
 }
 
 void Prison::addnumber(int prisonerID){
-	for (int i = 0; i < Groups.size(); i++){
-		if (Groups[i].addnumber(prisonerID)){
-			return;
+	if (Groups.size() != 0){
+		for (int i = 0; i < Groups.size(); i++){
+			if (Groups[i].addnumber(prisonerID)){
+				return;
+			}
 		}
 	}
 	PrisonerGroup pg;
 	Groups.push_back(pg);
-	pg.addnumber(prisonerID);
+	addnumber(prisonerID);
 }
 
 void Prison::printgroups(){
