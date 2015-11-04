@@ -1,19 +1,25 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <utility>
 
 class Crane{
 
 	std::string target, current;
-	int doneupto;
+	int begin, end;
+	std::vector<std::pair<int, int>> moves;
 
 public:
 
-	Crane(std::string s1, std::string s2) : target(s2), current(s1), doneupto(0){}
+	Crane(std::string s1, std::string s2) : target(s2), current(s1), begin(0), end(s2.size()){}
 
 	void sort();
 
-	std::vector<int> findbestchange();
+	std::pair<int, int> findbestchange_front();
+
+	std::pair<int, int> findbestchange_back();
+
+	std::pair<int, int> findbestchange_full();
 
 	std::string stringflip(std::string, int, int);
 
