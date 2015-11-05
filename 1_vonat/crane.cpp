@@ -43,11 +43,11 @@ std::pair<int, int> Crane::findbestchange_front(){
 	return std::pair<int, int>(1, 1);
 }
 
-std::pair<int, int> findbestchange_back(){
+std::pair<int, int> Crane::findbestchange_back(){
 	return std::pair<int, int>(1, 1);
 }
 
-std::pair<int, int> findbestchange_full(){
+std::pair<int, int> Crane::findbestchange_full(){
 	return std::pair<int, int>(1, 1);
 
 }
