@@ -272,14 +272,15 @@ std::vector<Shape> Shape::extend()
                         Shape new_shape(cmp_shape);
                         new_shape.array[i + down -1][j + right -1] = 'X';
                         new_shape.array[i + down -1][j + right] = 'X';
-                        //TODO: check whethr it's still in there
+                        //TODO: check whether it's still in there
+                        //TODO: check whether it has a hole
                         new_shapes.push_back(new_shape);
                     }
 
                     //Horizontal_2
                     // **
                     // X
-                    int left = cmp_shape.shift_left(); //It should restore j index
+                    cmp_shape.shift_left(); //It should restore j index
                     if(cmp_shape.array[i + down -1][j + 1] == ' ')
                     {
                         Shape new_shape(cmp_shape);
@@ -302,15 +303,137 @@ std::vector<Shape> Shape::extend()
                         new_shapes.push_back(new_shape);
                     }
                 }
-                //Left
-
-                //Right
 
                 //Down
+                cmp_shape.shift_up(); //Should restore i
+                if(cmp_shape.array[i+1][j] == ' ')
+                {
+                    //Horizontal_1
+                    // X
+                    //**
+                    int right = cmp_shape.shift_right();
+                    if(cmp_shape.array[i+1][j + right -1] == ' ')
+                    {
+                        Shape new_shape(cmp_shape);
+                        new_shape.array[i + 1][j + right -1] = 'X';
+                        new_shape.array[i + 1][j + right] = 'X';
+                        //TODO
+                        new_shapes.push_back(new_shape);
+                    }
+
+                    cmp_shape.shift_left(); //Should restore j
+                    //Horizontal_2
+                    // X
+                    // **
+                    if(cmp_shape.array[i+1][j+1] == ' ')
+                    {
+                        Shape new_shape(cmp_shape);
+                        new_shape.array[i+1][j+1] = 'X';
+                        new_shape.array[i+1][j] = 'X';
+                        //TODO
+                        new_shapes.push_back(new_shape);
+                    }
+
+                    //Vertical
+                    // X
+                    // *
+                    // *
+                    if(cmp_shape.array[i+2][j] == ' ')
+                    {
+                        Shape new_shape(cmp_shape);
+                        new_shape.array[i+1][j] = 'X';
+                        new_shape.array[i+2][j] = 'X';
+                        //TODO
+                        new_shapes.push_back(new_shape);
+                    }
+                }
+
+                //Left
+                int right = cmp_shape.shift_right();
+                if(cmp_shape.array[i][j + right -1] == ' ')
+                {
+                    //Vertical_1
+                    // *
+                    // *X
+                    int down = cmp_shape.shift_down();
+                    if(cmp_shape.array[i + down - 1][j + right -1] == ' ')
+                    {
+                        Shape new_shape(cmp_shape);
+                        new_shape.array[i + down -1][j + right -1] = 'X';
+                        new_shape.array[i + down][j + right -1] = 'X';
+                        //TODO
+                        new_shapes.push_back(new_shape);
+                    }
+
+                    //Vertical_2
+                    // *X
+                    // *
+                    cmp_shape.shift_up(); //Should restore i
+                    if(cmp_shape.array[i + 1][j + right -1] == ' ')
+                    {
+                        Shape new_shape(cmp_shape);
+                        new_shape.array[i + 1][j + right -1] = 'X';
+                        new_shape.array[i][j + right -1] = 'X';
+                        //TODO
+                        new_shapes.push_back(new_shape);
+                    }
+
+                    //Horizontal
+                    // **X
+                    if(cmp_shape.array[i][j + right -2] == ' ')
+                    {
+                        Shape new_shape(cmp_shape);
+                        new_shape.array[i][j + right -2] = 'X';
+                        new_shape.array[i][j + right -1] = 'X';
+                        //TODO
+                        new_shapes.push_back(new_shape);
+                    }
+                }
+
+                //Right
+                cmp_shape.shift_left(); //Should restore j
+                if(cmp_shape.array[i][j + 1] == ' ')
+                {
+                    //Vertical_1
+                    //  *
+                    // X*
+                    int down = cmp_shape.shift_down();
+                    if(cmp_shape.array[i + down -1][j + 1] == ' ')
+                    {
+                        Shape new_shape(cmp_shape);
+                        new_shape.array[i + down -1][j + 1] = 'X';
+                        new_shape.array[i + down][j + 1] = 'X';
+                        //TODO
+                        new_shapes.push_back(new_shape);
+                    }
+
+                    //Vertical_2
+                    // X*
+                    //  *
+                    cmp_shape.shift_up(); //Should restore i
+                    if(cmp_shape.array[i + 1][j + 1] == ' ')
+                    {
+                        Shape new_shape(cmp_shape);
+                        new_shape.array[i + 1][j + 1] = 'X';
+                        new_shape.array[i][j + 1] = 'X';
+                        //TODO
+                        new_shapes.push_back(new_shape);
+                    }
+
+                    //Horizontal
+                    // X**
+                    if(cmp_shape.array[i][j + 2] == ' ')
+                    {
+                        Shape new_shape(cmp_shape);
+                        new_shape.array[i][j + 1] = 'X';
+                        new_shape.array[i][j + 2] = 'X';
+                        //TODO
+                        new_shapes.push_back(new_shape);
+                    }
+                }
             }
         }
     }
 
-    std::vector<Shape> a;
-    return a;
+    return new_shapes;
 }
