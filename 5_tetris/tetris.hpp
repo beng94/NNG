@@ -45,5 +45,6 @@ class Shape
         Shape& rotate();
         bool has_hole();
         bool equals(Shape);
+        bool exists(std::vector<Shape>&);
         std::vector<Shape> extend();
 };
