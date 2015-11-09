@@ -290,9 +290,10 @@ std::vector<Shape> Shape::extend()
                         Shape new_shape(cmp_shape);
                         new_shape.array[i + down -1][j + right -1] = 'X';
                         new_shape.array[i + down -1][j + right] = 'X';
-                        //TODO: check whether it's still in there
-                        //TODO: check whether it has a hole
-                        new_shapes.push_back(new_shape);
+
+                        if(!this->has_hole() &&
+                           !this->exists(new_shapes))
+                            new_shapes.push_back(new_shape);
                     }
 
                     //Horizontal_2
@@ -304,8 +305,10 @@ std::vector<Shape> Shape::extend()
                         Shape new_shape(cmp_shape);
                         new_shape.array[i + down -1][j + 1] = 'X';
                         new_shape.array[i + down -1][j] = 'X';
-                        //TODO
-                        new_shapes.push_back(new_shape);
+
+                        if(!this->has_hole() &&
+                           !this->exists(new_shapes))
+                            new_shapes.push_back(new_shape);
                     }
 
                     //Vertical
@@ -317,8 +320,10 @@ std::vector<Shape> Shape::extend()
                         Shape new_shape(cmp_shape);
                         new_shape.array[i + down -2][j] = 'X';
                         new_shape.array[i + down -1][j] = 'X';
-                        //TODO
-                        new_shapes.push_back(new_shape);
+
+                        if(!this->has_hole() &&
+                           !this->exists(new_shapes))
+                            new_shapes.push_back(new_shape);
                     }
                 }
 
@@ -335,8 +340,10 @@ std::vector<Shape> Shape::extend()
                         Shape new_shape(cmp_shape);
                         new_shape.array[i + 1][j + right -1] = 'X';
                         new_shape.array[i + 1][j + right] = 'X';
-                        //TODO
-                        new_shapes.push_back(new_shape);
+
+                        if(!this->has_hole() &&
+                           !this->exists(new_shapes))
+                            new_shapes.push_back(new_shape);
                     }
 
                     cmp_shape.shift_left(); //Should restore j
@@ -348,8 +355,10 @@ std::vector<Shape> Shape::extend()
                         Shape new_shape(cmp_shape);
                         new_shape.array[i+1][j+1] = 'X';
                         new_shape.array[i+1][j] = 'X';
-                        //TODO
-                        new_shapes.push_back(new_shape);
+
+                        if(!this->has_hole() &&
+                           !this->exists(new_shapes))
+                            new_shapes.push_back(new_shape);
                     }
 
                     //Vertical
@@ -361,8 +370,10 @@ std::vector<Shape> Shape::extend()
                         Shape new_shape(cmp_shape);
                         new_shape.array[i+1][j] = 'X';
                         new_shape.array[i+2][j] = 'X';
-                        //TODO
-                        new_shapes.push_back(new_shape);
+
+                        if(!this->has_hole() &&
+                           !this->exists(new_shapes))
+                            new_shapes.push_back(new_shape);
                     }
                 }
 
@@ -379,8 +390,10 @@ std::vector<Shape> Shape::extend()
                         Shape new_shape(cmp_shape);
                         new_shape.array[i + down -1][j + right -1] = 'X';
                         new_shape.array[i + down][j + right -1] = 'X';
-                        //TODO
-                        new_shapes.push_back(new_shape);
+
+                        if(!this->has_hole() &&
+                           !this->exists(new_shapes))
+                            new_shapes.push_back(new_shape);
                     }
 
                     //Vertical_2
@@ -392,8 +405,10 @@ std::vector<Shape> Shape::extend()
                         Shape new_shape(cmp_shape);
                         new_shape.array[i + 1][j + right -1] = 'X';
                         new_shape.array[i][j + right -1] = 'X';
-                        //TODO
-                        new_shapes.push_back(new_shape);
+
+                        if(!this->has_hole() &&
+                           !this->exists(new_shapes))
+                            new_shapes.push_back(new_shape);
                     }
 
                     //Horizontal
@@ -403,8 +418,10 @@ std::vector<Shape> Shape::extend()
                         Shape new_shape(cmp_shape);
                         new_shape.array[i][j + right -2] = 'X';
                         new_shape.array[i][j + right -1] = 'X';
-                        //TODO
-                        new_shapes.push_back(new_shape);
+
+                        if(!this->has_hole() &&
+                           !this->exists(new_shapes))
+                            new_shapes.push_back(new_shape);
                     }
                 }
 
@@ -421,8 +438,10 @@ std::vector<Shape> Shape::extend()
                         Shape new_shape(cmp_shape);
                         new_shape.array[i + down -1][j + 1] = 'X';
                         new_shape.array[i + down][j + 1] = 'X';
-                        //TODO
-                        new_shapes.push_back(new_shape);
+
+                        if(!this->has_hole() &&
+                           !this->exists(new_shapes))
+                            new_shapes.push_back(new_shape);
                     }
 
                     //Vertical_2
@@ -434,8 +453,10 @@ std::vector<Shape> Shape::extend()
                         Shape new_shape(cmp_shape);
                         new_shape.array[i + 1][j + 1] = 'X';
                         new_shape.array[i][j + 1] = 'X';
-                        //TODO
-                        new_shapes.push_back(new_shape);
+
+                        if(!this->has_hole() &&
+                           !this->exists(new_shapes))
+                            new_shapes.push_back(new_shape);
                     }
 
                     //Horizontal
@@ -445,8 +466,10 @@ std::vector<Shape> Shape::extend()
                         Shape new_shape(cmp_shape);
                         new_shape.array[i][j + 1] = 'X';
                         new_shape.array[i][j + 2] = 'X';
-                        //TODO
-                        new_shapes.push_back(new_shape);
+
+                        if(!this->has_hole() &&
+                           !this->exists(new_shapes))
+                            new_shapes.push_back(new_shape);
                     }
                 }
             }
