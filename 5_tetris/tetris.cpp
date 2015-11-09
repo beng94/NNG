@@ -214,7 +214,7 @@ void Shape::shift_top_left()
     this->shift_up();
 }
 
-void Shape::rotate()
+Shape& Shape::rotate()
 {
     CharArray tmp(n);
     for(int i = 0; i < n; i++)
@@ -226,6 +226,8 @@ void Shape::rotate()
     }
 
     array = tmp;
+
+    return *this;
 }
 
 bool Shape::surrounded(int n, int m)

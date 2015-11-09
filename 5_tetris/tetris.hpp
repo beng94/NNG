@@ -41,7 +41,7 @@ class Shape
         Shape& operator= (const Shape&);
         void shift_top_left();
         void print();
-        void rotate();
+        Shape& rotate();
         bool has_hole();
         std::vector<Shape> extend();
 };
