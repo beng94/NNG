@@ -455,3 +455,15 @@ std::vector<Shape> Shape::extend()
 
     return new_shapes;
 }
+
+//TODO: make sure parameters remain const
+//Parameter is copied so I can rotate it
+bool Shape::equals(Shape rhs)
+{
+    if (rhs == *this) return true;
+    else if(rhs.rotate() == *this) return true;
+    else if(rhs.rotate() == *this) return true;
+    else if(rhs.rotate() == *this) return true;
+
+    return false;
+}
