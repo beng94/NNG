@@ -39,6 +39,7 @@ class Shape
         Shape(const Shape&);
 
         Shape& operator= (const Shape&);
+        bool operator== (Shape&);
         void shift_top_left();
         void print();
         Shape& rotate();

@@ -52,6 +52,22 @@ Shape::Shape(int n, const Shape& rhs) : n{n}, array{n, rhs.array} {}
 
 Shape::Shape(const Shape& rhs) : n{rhs.n}, array{rhs.array} {}
 
+//Parameter is not const because of the usage of operator[]
+bool Shape::operator== (Shape& rhs)
+{
+    if (rhs.n != n) return false;
+
+    for(int i = 0; i<n; i++)
+    {
+        for(int j = 0; j<n; j++)
+        {
+            if(array[i][j] != rhs.array[i][j]) return false;
+        }
+    }
+
+    return true;
+}
+
 void Shape::print()
 {
     for(int i = 0; i < n; i++)
