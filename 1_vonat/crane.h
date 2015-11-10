@@ -11,7 +11,7 @@ class Crane{
 
 public:
 
-	Crane(std::string s1, std::string s2) : target(s2), current(s1), begin(0), end(s2.size()){}
+	Crane(std::string s1, std::string s2) : target(s2), current(s1), begin(0), end(s2.size()-1){}
 
 	void sort();
 
