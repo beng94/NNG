@@ -4,27 +4,34 @@
 void Crane::sort(){
 
 	while (begin != end){
+		std::cout << current << " " << target << std::endl;
 		std::vector<std::pair<int, int>> changepairs;
 		changepairs.push_back(findbestchange_front());
 		changepairs.push_back(findbestchange_back());
-		changepairs.push_back(findbestchange_full());
-		if (changepairs[0].first > changepairs[1].first &&
-			changepairs[0].first > (changepairs[2].first + changepairs[2].second)){
+		//changepairs.push_back(findbestchange_full());
+
+		if (changepairs[0].first > changepairs[1].first/* &&
+			changepairs[0].first > (changepairs[2].first + changepairs[2].second)*/){
+
 			current = stringflip(current, begin, changepairs[0].second);
+			moves.push_back(std::pair<int, int>(begin, changepairs[0].second));
 			begin += changepairs[0].first;
 		}
-		else if (changepairs[1].first > changepairs[0].first &&
-			changepairs[1].first > (changepairs[2].first + changepairs[2].second)){
+
+		else if (changepairs[1].first >= changepairs[0].first/* &&
+			changepairs[1].first > (changepairs[2].first + changepairs[2].second)*/){
+
 			current = stringflip(current, end - changepairs[1].second, end);
+			moves.push_back(std::pair<int, int>(end - changepairs[1].second, end));
 			end -= changepairs[1].first;
 		}
+
 		else{
 			current = stringflip(current, begin, end);
 			begin += changepairs[2].first;
 			end -= changepairs[2].second;
+			moves.push_back(std::pair<int, int>(begin, end));
 		}
-		std::cout << current << std::endl;
-		getchar();
 	}
 }
 
@@ -51,7 +58,7 @@ std::pair<int, int> Crane::findbestchange_front(){
 			if ((k == end + 1) || (j == begin - 1))
 				break;
 		}
-		if (k - begin > maxamount){
+		if ((k - begin) > maxamount){
 			maxamount = k - begin;
 			maxplace = i;
 		}

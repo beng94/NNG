@@ -6,10 +6,10 @@ int main(){
 	Crane c("aaabbbccc", "aababbccc");
 	c.sort();
 	c.getresults();
-	std::string valami("faabbccaa");
+	std::string valami("abcdefgh");
 	std::cout << std::endl << std::string(valami.rbegin(), valami.rend()) << std::endl;
-	std::cout << valami.substr(2, 6) << std::endl;
-	std::cout << c.stringflip(valami, 2, valami.size());
+	std::cout << valami.substr(2, 4) << std::endl;
+	std::cout << c.stringflip(valami, 2, 6);
 	getchar();
 	while (true){}
 }

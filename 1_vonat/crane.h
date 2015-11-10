@@ -24,7 +24,10 @@ public:
 	std::string stringflip(std::string, int, int);
 
 	void getresults(){
-		std::cout << current << std::endl << target;
+		std::cout << moves.size() << std::endl;
+		for (int i = 0; i < moves.size(); i++){
+			std::cout << moves[i].first << ' ' << moves[i].second << std::endl;
+		}
 	}
 
 	int matchingchars(std::string, std::string);
