@@ -19,8 +19,10 @@ CharArray::CharArray(int n, const CharArray& rhs) : CharArray{n}
     }
 }
 
-CharArray::CharArray(const CharArray& rhs) : CharArray{n}
+CharArray::CharArray(const CharArray& rhs) : n{rhs.n}
 {
+    ptr = std::unique_ptr<char[]>(new char[n*n]);
+
     //Cant use operator= because of const in operator[]...
     for(int i = 0; i < n*n; i++)
     {
