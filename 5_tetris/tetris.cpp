@@ -502,7 +502,7 @@ bool Shape::exists(std::vector<Shape>& vec)
 {
     for(auto s: vec)
     {
-        if(s == *this) return true;
+        if(this->equals(s)) return true;
     }
 
     return false;
