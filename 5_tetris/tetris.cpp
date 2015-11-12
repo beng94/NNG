@@ -258,6 +258,8 @@ Shape& Shape::rotate()
 
     array = tmp;
 
+    this->shift_top_left();
+
     return *this;
 }
 
