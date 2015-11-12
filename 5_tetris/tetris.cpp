@@ -195,7 +195,7 @@ int Shape::shift_right()
         //Shift every column but the last to the right by one
         for(int i = 0; i < n; i++)
         {
-            for(int j = 1; j < n; j++)
+            for(int j = n -1; j > 0; j--)
             {
                 array[i][j] = array[i][j - 1];
             }
