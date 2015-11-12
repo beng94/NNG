@@ -219,7 +219,7 @@ int Shape::shift_down()
     while (this->last_row_empty())
     {
         //Shift every line but the last up by one
-        for(int i = 1; i < n; i++)
+        for(int i = n - 1; i > cnt; i--)
         {
             for(int j = 0; j < n; j++)
             {
@@ -230,7 +230,7 @@ int Shape::shift_down()
         //Fill the first row with ' '
         for(int i = 0; i < n; i++)
         {
-            array[0][i] = ' ';
+            array[cnt][i] = ' ';
         }
 
         cnt++;
