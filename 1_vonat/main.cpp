@@ -3,7 +3,8 @@
 
 int main(){
 	//Pájnusz monochrome perpetuity
-	Crane c("aaabbbccc", "aababbccc");
+	Crane c("hcedffhcjjhgbgjiiadg", "jhhhgbcjffdecgjgdaii");
+	std::cout << c.stringflip("aaabbbccc", 1, 3) << std::endl;
 	c.sort();
 	c.getresults();
 	std::string valami("abcdefgh");

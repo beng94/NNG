@@ -2,6 +2,7 @@
 #include <vector>
 #include <iostream>
 #include <utility>
+#include <fstream>
 
 class Crane{
 
@@ -29,10 +30,13 @@ public:
 	std::string stringflip(std::string, int, int);
 
 	void getresults(){
-		std::cout << moves.size() << std::endl;
+		std::ofstream farok;
+		farok.open("valami2.txt", std::ios::app);
+		farok << moves.size() << std::endl;
 		for (int i = 0; i < moves.size(); i++){
-			std::cout << moves[i].first << ' ' << moves[i].second << std::endl;
+			farok << moves[i].first << ' ' << moves[i].second << std::endl;
 		}
+		farok.close();
 	}
 
 	int matchingchars(std::string, std::string);
