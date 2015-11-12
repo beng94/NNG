@@ -46,7 +46,14 @@ char* CharArray::operator[] (int row)
     return ptr.get() + row*n;
 }
 
-Shape::Shape(int n) : n{n}, array{n} {}
+Shape::Shape(int n, bool init) : n{n}, array{n}
+{
+    if(init)
+    {
+        array[0][0] = 'X';
+        array[0][1] = 'X';
+    }
+}
 
 Shape::Shape(int n, const Shape& rhs) : n{n}, array{n, rhs.array} {}
 

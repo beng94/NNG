@@ -34,7 +34,7 @@ class Shape
 
     public:
         Shape() = delete;
-        Shape(int);
+        Shape(int, bool);
         Shape(int, const Shape&);
         Shape(const Shape&);
 

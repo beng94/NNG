@@ -2,8 +2,7 @@
 
 int main()
 {
-    Shape s(3);
-    s.print();
+    Shape s(2, true);
     s.extend();
 
     return 0;
