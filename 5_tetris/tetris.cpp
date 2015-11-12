@@ -59,6 +59,14 @@ Shape::Shape(int n, const Shape& rhs) : n{n}, array{n, rhs.array} {}
 
 Shape::Shape(const Shape& rhs) : n{rhs.n}, array{rhs.array} {}
 
+Shape& Shape::operator= (Shape& rhs)
+{
+    n = rhs.n;
+    array = rhs.array;
+
+    return *this;
+}
+
 //Parameter is not const because of the usage of operator[]
 bool Shape::operator== (Shape& rhs)
 {

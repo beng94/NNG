@@ -38,7 +38,7 @@ class Shape
         Shape(int, const Shape&);
         Shape(const Shape&);
 
-        Shape& operator= (const Shape&);
+        Shape& operator= (Shape&);
         bool operator== (Shape&);
         void shift_top_left();
         void print();
