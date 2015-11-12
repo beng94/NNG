@@ -5,7 +5,7 @@ CharArray::CharArray(int n) : n{n}
 {
     ptr = std::unique_ptr<char[]>(new char[n*n]);
     for(int i = 0; i < n*n; i++)
-        ptr[i] = 'O';
+        ptr[i] = ' ';
 }
 
 CharArray::CharArray(int n, const CharArray& rhs) : CharArray{n}
