@@ -1,5 +1,8 @@
 #include "tetris.hpp"
 #include <iostream>
+#include <cstring>
+
+CharArray::CharArray() : n{0}, ptr{nullptr} {}
 
 CharArray::CharArray(int n) : n{n}
 {
@@ -32,6 +35,9 @@ CharArray::CharArray(const CharArray& rhs) : n{rhs.n}
 
 CharArray& CharArray::operator= (CharArray& rhs)
 {
+    n = rhs.n;
+    ptr = std::unique_ptr<char[]>(new char[n * n]);
+
     for(int i = 0; i< n; i++)
     {
         for(int j = 0; j < n; j++)
@@ -41,6 +47,28 @@ CharArray& CharArray::operator= (CharArray& rhs)
     }
 
     return *this;
+}
+
+void CharArray::print()
+{
+    for(int i = 0; i < n; i++)
+    {
+        for(int j= 0; j <n ; j++)
+        {
+            std::cout << ptr[i*n + j] << " ";
+        }
+        std::cout << std::endl;
+    }
+}
+
+bool CharArray::operator== (CharArray& rhs)
+{
+    for(int i = 0; i < n * n; i++)
+    {
+        if(rhs.ptr[i] != ptr[i]) return false;
+    }
+
+    return true;
 }
 
 char* CharArray::operator[] (int row)
@@ -59,12 +87,22 @@ Shape::Shape(int n, bool init) : n{n}, array{n}
 
 Shape::Shape(int n, const Shape& rhs) : n{n}, array{n, rhs.array} {}
 
-Shape::Shape(const Shape& rhs) : n{rhs.n}, array{rhs.array} {}
+Shape::Shape(const Shape& rhs) : n{rhs.n}, array{rhs.array}
+{
+    Shape tmp;
+    tmp = const_cast<Shape&>(rhs);
+    rotations[0] = tmp.rotations[0];
+    rotations[1] = tmp.rotations[1];
+    rotations[2] = tmp.rotations[2];
+}
 
 Shape& Shape::operator= (Shape& rhs)
 {
     n = rhs.n;
     array = rhs.array;
+    rotations[0] = rhs.rotations[0];
+    rotations[1] = rhs.rotations[1];
+    rotations[2] = rhs.rotations[2];
 
     return *this;
 }
@@ -284,6 +322,14 @@ bool Shape::has_hole()
     return false;
 }
 
+void Shape::set_rotations()
+{
+    rotations[0] = this->rotate().array;
+    rotations[1] = this->rotate().array;
+    rotations[2] = this->rotate().array;
+    this->rotate(); //To rotate it back
+}
+
 std::vector<Shape> Shape::extend()
 {
     Shape cmp_shape(n + 2, *this);
@@ -315,8 +361,9 @@ std::vector<Shape> Shape::extend()
                            !new_shape.exists(new_shapes))
                         {
                             new_shape.shift_top_left();
+                            new_shape.set_rotations();
                             new_shapes.push_back(new_shape);
-                        }
+                      }
                     }
 
                     //Horizontal_2
@@ -334,6 +381,7 @@ std::vector<Shape> Shape::extend()
                            !new_shape.exists(new_shapes))
                         {
                             new_shape.shift_top_left();
+                            new_shape.set_rotations();
                             new_shapes.push_back(new_shape);
                         }
                     }
@@ -353,6 +401,7 @@ std::vector<Shape> Shape::extend()
                            !new_shape.exists(new_shapes))
                         {
                             new_shape.shift_top_left();
+                            new_shape.set_rotations();
                             new_shapes.push_back(new_shape);
                         }
                     }
@@ -377,6 +426,7 @@ std::vector<Shape> Shape::extend()
                            !new_shape.exists(new_shapes))
                          {
                             new_shape.shift_top_left();
+                            new_shape.set_rotations();
                             new_shapes.push_back(new_shape);
                         }
                     }
@@ -396,6 +446,7 @@ std::vector<Shape> Shape::extend()
                            !new_shape.exists(new_shapes))
                         {
                             new_shape.shift_top_left();
+                            new_shape.set_rotations();
                             new_shapes.push_back(new_shape);
                         }
                     }
@@ -415,6 +466,7 @@ std::vector<Shape> Shape::extend()
                            !new_shape.exists(new_shapes))
                         {
                             new_shape.shift_top_left();
+                            new_shape.set_rotations();
                             new_shapes.push_back(new_shape);
                         }
                     }
@@ -439,6 +491,7 @@ std::vector<Shape> Shape::extend()
                            !new_shape.exists(new_shapes))
                         {
                             new_shape.shift_top_left();
+                            new_shape.set_rotations();
                             new_shapes.push_back(new_shape);
                         }
                     }
@@ -458,6 +511,7 @@ std::vector<Shape> Shape::extend()
                            !new_shape.exists(new_shapes))
                         {
                             new_shape.shift_top_left();
+                            new_shape.set_rotations();
                             new_shapes.push_back(new_shape);
                         }
                     }
@@ -475,6 +529,7 @@ std::vector<Shape> Shape::extend()
                            !new_shape.exists(new_shapes))
                         {
                             new_shape.shift_top_left();
+                            new_shape.set_rotations();
                             new_shapes.push_back(new_shape);
                         }
                     }
@@ -499,6 +554,7 @@ std::vector<Shape> Shape::extend()
                            !new_shape.exists(new_shapes))
                         {
                             new_shape.shift_top_left();
+                            new_shape.set_rotations();
                             new_shapes.push_back(new_shape);
                         }
                     }
@@ -518,6 +574,7 @@ std::vector<Shape> Shape::extend()
                            !new_shape.exists(new_shapes))
                         {
                             new_shape.shift_top_left();
+                            new_shape.set_rotations();
                             new_shapes.push_back(new_shape);
                         }
                     }
@@ -535,6 +592,7 @@ std::vector<Shape> Shape::extend()
                            !new_shape.exists(new_shapes))
                         {
                             new_shape.shift_top_left();
+                            new_shape.set_rotations();
                             new_shapes.push_back(new_shape);
                         }
                     }
@@ -551,9 +609,9 @@ std::vector<Shape> Shape::extend()
 bool Shape::equals(Shape rhs)
 {
     if (rhs == *this) return true;
-    else if(rhs.rotate() == *this) return true;
-    else if(rhs.rotate() == *this) return true;
-    else if(rhs.rotate() == *this) return true;
+    else if(rhs.rotations[0] == this->array) return true;
+    else if(rhs.rotations[1] == this->array) return true;
+    else if(rhs.rotations[2] == this->array) return true;
 
     return false;
 }

@@ -8,12 +8,15 @@ class CharArray
         std::unique_ptr<char[]> ptr;
 
     public:
+        CharArray();
         CharArray(int);
         CharArray(int, const CharArray&);
         CharArray(const CharArray&);
 
         CharArray& operator= (CharArray&);
+        bool operator== (CharArray&);
         char* operator[] (int);
+        void print();
 };
 
 class Shape
@@ -21,6 +24,7 @@ class Shape
     private:
         int n;
         CharArray array;
+        CharArray rotations[3];
 
         bool first_col_empty();
         bool first_row_empty();
@@ -33,13 +37,14 @@ class Shape
         bool surrounded(int, int);
 
     public:
-        Shape() = delete;
+        Shape() = default;
         Shape(int, bool);
         Shape(int, const Shape&);
         Shape(const Shape&);
 
         Shape& operator= (Shape&);
         bool operator== (Shape&);
+        void set_rotations();
         void shift_top_left();
         void print();
         Shape& rotate();

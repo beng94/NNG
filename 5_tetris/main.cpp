@@ -4,23 +4,25 @@
 int main()
 {
     Shape s(2, true);
-    s.extend();
+    s.set_rotations();
 
     std::vector<Shape> shapes;
     shapes.push_back(s);
 
-    std::vector<int> sol_num;
-
     for(int i = 0; i < 7; i++)
     {
         std::vector<Shape> new_shapes;
+        int cnt = 0;
         for(auto s: shapes)
         {
+            std::cout << (++cnt) << " " << new_shapes.size() << std::endl;
             auto vec = s.extend();
             for(auto v: vec)
             {
                 if(!v.exists(new_shapes))
-                    new_shapes.push_back(v);
+                {
+                     new_shapes.push_back(v);
+                }
             }
         }
 
@@ -29,13 +31,7 @@ int main()
         for(auto n: new_shapes)
             shapes.push_back(n);
 
-        sol_num.push_back(shapes.size());
         std::cout << shapes.size() << std::endl;
-    }
-
-    for(auto i: sol_num)
-    {
-        std::cout << i << std::endl;
     }
 
     return 0;
