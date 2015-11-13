@@ -14,9 +14,11 @@ class CharArray
         CharArray(const CharArray&);
 
         CharArray& operator= (CharArray&);
-        bool operator== (CharArray&);
+        bool operator< (const CharArray&) const;
+        bool operator== (const CharArray&) const;
         char* operator[] (int);
         void print();
+        int get_len() const;
 };
 
 class Shape
@@ -24,7 +26,6 @@ class Shape
     private:
         int n;
         CharArray array;
-        CharArray rotations[3];
 
         bool first_col_empty();
         bool first_row_empty();
@@ -43,7 +44,8 @@ class Shape
         Shape(const Shape&);
 
         Shape& operator= (Shape&);
-        bool operator== (Shape&);
+        bool operator< (const Shape&) const;
+        bool operator== (const Shape&) const;
         void set_rotations();
         void shift_top_left();
         void print();
@@ -52,4 +54,5 @@ class Shape
         bool equals(Shape);
         bool exists(std::vector<Shape>&);
         std::vector<Shape> extend();
+        int get_len() const;
 };

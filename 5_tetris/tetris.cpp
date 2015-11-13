@@ -6,9 +6,10 @@ CharArray::CharArray() : n{0}, ptr{nullptr} {}
 
 CharArray::CharArray(int n) : n{n}
 {
-    ptr = std::unique_ptr<char[]>(new char[n*n]);
+    ptr = std::unique_ptr<char[]>(new char[n*n + 1]);
     for(int i = 0; i < n*n; i++)
         ptr[i] = ' ';
+    ptr[n*n] = '\0';
 }
 
 CharArray::CharArray(int n, const CharArray& rhs) : CharArray{n}
@@ -20,6 +21,7 @@ CharArray::CharArray(int n, const CharArray& rhs) : CharArray{n}
             ptr[i * rhs.n + i * 2 + j] = rhs.ptr[i * rhs.n + j];
         }
     }
+    ptr[n*n] = '\0';
 }
 
 CharArray::CharArray(const CharArray& rhs) : n{rhs.n}
@@ -31,6 +33,8 @@ CharArray::CharArray(const CharArray& rhs) : n{rhs.n}
     {
         ptr[i] = rhs.ptr[i];
     }
+    ptr[n*n] = '\0';
+
 }
 
 CharArray& CharArray::operator= (CharArray& rhs)
@@ -38,13 +42,11 @@ CharArray& CharArray::operator= (CharArray& rhs)
     n = rhs.n;
     ptr = std::unique_ptr<char[]>(new char[n * n]);
 
-    for(int i = 0; i< n; i++)
+    for(int i = 0; i< n*n; i++)
     {
-        for(int j = 0; j < n; j++)
-        {
-            (*this)[i][j] = rhs[i][j];
-        }
+        ptr[i] = rhs.ptr[i];
     }
+    ptr[n*n] = '\0';
 
     return *this;
 }
@@ -61,7 +63,12 @@ void CharArray::print()
     }
 }
 
-bool CharArray::operator== (CharArray& rhs)
+bool CharArray::operator< (const CharArray& rhs) const
+{
+    return strcmp(ptr.get(), rhs.ptr.get()) < 0;
+}
+
+bool CharArray::operator== (const CharArray& rhs) const
 {
     for(int i = 0; i < n * n; i++)
     {
@@ -76,6 +83,11 @@ char* CharArray::operator[] (int row)
     return ptr.get() + row*n;
 }
 
+int CharArray::get_len() const
+{
+    return strlen(ptr.get());
+}
+
 Shape::Shape(int n, bool init) : n{n}, array{n}
 {
     if(init)
@@ -87,40 +99,27 @@ Shape::Shape(int n, bool init) : n{n}, array{n}
 
 Shape::Shape(int n, const Shape& rhs) : n{n}, array{n, rhs.array} {}
 
-Shape::Shape(const Shape& rhs) : n{rhs.n}, array{rhs.array}
-{
-    Shape tmp;
-    tmp = const_cast<Shape&>(rhs);
-    rotations[0] = tmp.rotations[0];
-    rotations[1] = tmp.rotations[1];
-    rotations[2] = tmp.rotations[2];
-}
+Shape::Shape(const Shape& rhs) : n{rhs.n}, array{rhs.array} {}
 
 Shape& Shape::operator= (Shape& rhs)
 {
     n = rhs.n;
     array = rhs.array;
-    rotations[0] = rhs.rotations[0];
-    rotations[1] = rhs.rotations[1];
-    rotations[2] = rhs.rotations[2];
 
     return *this;
 }
 
+bool Shape::operator< (const Shape& rhs) const
+{
+    return array < rhs.array;
+}
+
 //Parameter is not const because of the usage of operator[]
-bool Shape::operator== (Shape& rhs)
+bool Shape::operator== (const Shape& rhs) const
 {
     if (rhs.n != n) return false;
 
-    for(int i = 0; i<n; i++)
-    {
-        for(int j = 0; j<n; j++)
-        {
-            if(array[i][j] != rhs.array[i][j]) return false;
-        }
-    }
-
-    return true;
+    return rhs.array == array;
 }
 
 void Shape::print()
@@ -192,7 +191,7 @@ int Shape::shift_left()
         //Fill the last col with ' '
         for(int i = 0; i < n; i++)
         {
-            array[i][n-1] = ' ';
+            array[i][n - cnt - 1] = ' ';
         }
 
         cnt++;
@@ -207,7 +206,7 @@ int Shape::shift_up()
     while (this->first_row_empty())
     {
         //Shift every line but the last up by one
-        for(int i = 0; i < n -1; i++)
+        for(int i = 0; i < n-1; i++)
         {
             for(int j = 0; j < n; j++)
             {
@@ -218,7 +217,7 @@ int Shape::shift_up()
         //Fill the last row with ' '
         for(int i = 0; i < n; i++)
         {
-            array[n-1][i] = ' ';
+            array[n - cnt -1][i] = ' ';
         }
 
         cnt++;
@@ -244,7 +243,7 @@ int Shape::shift_right()
         //Fill the first col with ' '
         for(int i = 0; i < n; i++)
         {
-            array[i][0] = ' ';
+            array[i][cnt] = ' ';
         }
 
         cnt++;
@@ -322,14 +321,6 @@ bool Shape::has_hole()
     return false;
 }
 
-void Shape::set_rotations()
-{
-    rotations[0] = this->rotate().array;
-    rotations[1] = this->rotate().array;
-    rotations[2] = this->rotate().array;
-    this->rotate(); //To rotate it back
-}
-
 std::vector<Shape> Shape::extend()
 {
     Shape cmp_shape(n + 2, *this);
@@ -357,11 +348,9 @@ std::vector<Shape> Shape::extend()
                         new_shape.array[i + down -1][j + right] = 'X';
                         new_shape.shift_top_left();
 
-                        if(!this->has_hole() &&
-                           !new_shape.exists(new_shapes))
+                        if(!this->has_hole())
                         {
                             new_shape.shift_top_left();
-                            new_shape.set_rotations();
                             new_shapes.push_back(new_shape);
                       }
                     }
@@ -377,11 +366,9 @@ std::vector<Shape> Shape::extend()
                         new_shape.array[i + down -1][j] = 'X';
                         new_shape.shift_top_left();
 
-                        if(!this->has_hole() &&
-                           !new_shape.exists(new_shapes))
+                        if(!this->has_hole())
                         {
                             new_shape.shift_top_left();
-                            new_shape.set_rotations();
                             new_shapes.push_back(new_shape);
                         }
                     }
@@ -397,11 +384,9 @@ std::vector<Shape> Shape::extend()
                         new_shape.array[i + down -1][j] = 'X';
                         new_shape.shift_top_left();
 
-                        if(!this->has_hole() &&
-                           !new_shape.exists(new_shapes))
+                        if(!this->has_hole())
                         {
                             new_shape.shift_top_left();
-                            new_shape.set_rotations();
                             new_shapes.push_back(new_shape);
                         }
                     }
@@ -422,11 +407,9 @@ std::vector<Shape> Shape::extend()
                         new_shape.array[i + 1][j + right] = 'X';
                         new_shape.shift_top_left();
 
-                        if(!this->has_hole() &&
-                           !new_shape.exists(new_shapes))
-                         {
+                        if(!this->has_hole())
+                        {
                             new_shape.shift_top_left();
-                            new_shape.set_rotations();
                             new_shapes.push_back(new_shape);
                         }
                     }
@@ -442,11 +425,9 @@ std::vector<Shape> Shape::extend()
                         new_shape.array[i+1][j] = 'X';
                         new_shape.shift_top_left();
 
-                        if(!this->has_hole() &&
-                           !new_shape.exists(new_shapes))
+                        if(!this->has_hole())
                         {
                             new_shape.shift_top_left();
-                            new_shape.set_rotations();
                             new_shapes.push_back(new_shape);
                         }
                     }
@@ -462,11 +443,9 @@ std::vector<Shape> Shape::extend()
                         new_shape.array[i+2][j] = 'X';
                         new_shape.shift_top_left();
 
-                        if(!this->has_hole() &&
-                           !new_shape.exists(new_shapes))
+                        if(!this->has_hole())
                         {
                             new_shape.shift_top_left();
-                            new_shape.set_rotations();
                             new_shapes.push_back(new_shape);
                         }
                     }
@@ -487,11 +466,9 @@ std::vector<Shape> Shape::extend()
                         new_shape.array[i + down][j + right -1] = 'X';
                         new_shape.shift_top_left();
 
-                        if(!this->has_hole() &&
-                           !new_shape.exists(new_shapes))
+                        if(!this->has_hole())
                         {
                             new_shape.shift_top_left();
-                            new_shape.set_rotations();
                             new_shapes.push_back(new_shape);
                         }
                     }
@@ -507,11 +484,9 @@ std::vector<Shape> Shape::extend()
                         new_shape.array[i][j + right -1] = 'X';
                         new_shape.shift_top_left();
 
-                        if(!this->has_hole() &&
-                           !new_shape.exists(new_shapes))
+                        if(!this->has_hole())
                         {
                             new_shape.shift_top_left();
-                            new_shape.set_rotations();
                             new_shapes.push_back(new_shape);
                         }
                     }
@@ -525,11 +500,9 @@ std::vector<Shape> Shape::extend()
                         new_shape.array[i][j + right -1] = 'X';
                         new_shape.shift_top_left();
 
-                        if(!this->has_hole() &&
-                           !new_shape.exists(new_shapes))
+                        if(!this->has_hole())
                         {
                             new_shape.shift_top_left();
-                            new_shape.set_rotations();
                             new_shapes.push_back(new_shape);
                         }
                     }
@@ -550,11 +523,9 @@ std::vector<Shape> Shape::extend()
                         new_shape.array[i + down][j + 1] = 'X';
                         new_shape.shift_top_left();
 
-                        if(!this->has_hole() &&
-                           !new_shape.exists(new_shapes))
+                        if(!this->has_hole())
                         {
                             new_shape.shift_top_left();
-                            new_shape.set_rotations();
                             new_shapes.push_back(new_shape);
                         }
                     }
@@ -570,11 +541,9 @@ std::vector<Shape> Shape::extend()
                         new_shape.array[i][j + 1] = 'X';
                         new_shape.shift_top_left();
 
-                        if(!this->has_hole() &&
-                           !new_shape.exists(new_shapes))
+                        if(!this->has_hole())
                         {
                             new_shape.shift_top_left();
-                            new_shape.set_rotations();
                             new_shapes.push_back(new_shape);
                         }
                     }
@@ -588,11 +557,9 @@ std::vector<Shape> Shape::extend()
                         new_shape.array[i][j + 2] = 'X';
                         new_shape.shift_top_left();
 
-                        if(!this->has_hole() &&
-                           !new_shape.exists(new_shapes))
+                        if(!this->has_hole())
                         {
                             new_shape.shift_top_left();
-                            new_shape.set_rotations();
                             new_shapes.push_back(new_shape);
                         }
                     }
@@ -604,24 +571,7 @@ std::vector<Shape> Shape::extend()
     return new_shapes;
 }
 
-//TODO: make sure parameters remain const
-//Parameter is copied so I can rotate it
-bool Shape::equals(Shape rhs)
+int Shape::get_len() const
 {
-    if (rhs == *this) return true;
-    else if(rhs.rotations[0] == this->array) return true;
-    else if(rhs.rotations[1] == this->array) return true;
-    else if(rhs.rotations[2] == this->array) return true;
-
-    return false;
-}
-
-bool Shape::exists(std::vector<Shape>& vec)
-{
-    for(auto s: vec)
-    {
-        if(this->equals(s)) return true;
-    }
-
-    return false;
+    return array.get_len();
 }

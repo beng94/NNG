@@ -1,37 +1,75 @@
 #include "tetris.hpp"
 #include <iostream>
+#include <set>
+#include <cstdio>
 
 int main()
 {
     Shape s(2, true);
-    s.set_rotations();
 
-    std::vector<Shape> shapes;
-    shapes.push_back(s);
+    std::set<Shape> shapes;
+    shapes.insert(s);
 
     for(int i = 0; i < 7; i++)
     {
-        std::vector<Shape> new_shapes;
-        int cnt = 0;
+        int cnt= 0;
+        std::set<Shape> new_shapes;
         for(auto s: shapes)
         {
-            std::cout << (++cnt) << " " << new_shapes.size() << std::endl;
-            auto vec = s.extend();
-            for(auto v: vec)
+            cnt++;
+            if(cnt % 10000 == 0)
             {
-                if(!v.exists(new_shapes))
+                std::cout << cnt << new_shapes.size();
+
+                for(const auto& a: new_shapes)
                 {
-                     new_shapes.push_back(v);
+                    Shape tmp = a;
+                    Shape s1 = tmp.rotate();
+                    Shape s2 = tmp.rotate();
+                    Shape s3 = tmp.rotate();
+
+                    if (!(s1 == a)) new_shapes.erase(s1);
+                    if(!(s2 == a)) new_shapes.erase(s2);
+                    if(!(s3 == a)) new_shapes.erase(s3);
                 }
+
+                std::cout << " " << new_shapes.size() << std::endl;
             }
+
+            auto vec = s.extend();
+
+            for(const auto& v: vec)
+            {
+                Shape d = v;
+
+                Shape s1 = d.rotate();
+                Shape s2 = d.rotate();
+                Shape s3 = d.rotate();
+
+                auto a = new_shapes.insert(s1);
+                auto b = new_shapes.insert(s2);
+                auto c = new_shapes.insert(s3);
+           }
         }
 
-        //shapes = new_shapes;
+        for(const auto& a: new_shapes)
+        {
+            Shape tmp = a;
+            Shape s1 = tmp.rotate();
+            Shape s2 = tmp.rotate();
+            Shape s3 = tmp.rotate();
+
+            if (!(s1 == a)) new_shapes.erase(s1);
+            if(!(s2 == a)) new_shapes.erase(s2);
+            if(!(s3 == a)) new_shapes.erase(s3);
+        }
+
         shapes.clear();
-        for(auto n: new_shapes)
-            shapes.push_back(n);
+        shapes = new_shapes;
 
         std::cout << shapes.size() << std::endl;
+
+        getchar();
     }
 
     return 0;
