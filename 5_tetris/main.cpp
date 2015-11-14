@@ -36,7 +36,7 @@ int main()
                 std::cout << " " << new_shapes.size() << std::endl;
             }
 
-            auto vec = s.extend();
+            auto vec = std::move(s.extend());
 
             for(const auto& v: vec)
             {
@@ -46,9 +46,9 @@ int main()
                 Shape s2 = d.rotate();
                 Shape s3 = d.rotate();
 
-                auto a = new_shapes.insert(s1);
-                auto b = new_shapes.insert(s2);
-                auto c = new_shapes.insert(s3);
+                if(!s1.has_hole()) new_shapes.insert(s1);
+                if(!s2.has_hole()) new_shapes.insert(s2);
+                if(!s3.has_hole()) new_shapes.insert(s3);
            }
         }
 
@@ -68,8 +68,6 @@ int main()
         shapes = new_shapes;
 
         std::cout << shapes.size() << std::endl;
-
-        getchar();
     }
 
     return 0;

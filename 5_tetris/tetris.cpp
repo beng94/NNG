@@ -326,13 +326,16 @@ std::vector<Shape> Shape::extend()
     Shape cmp_shape(n + 2, *this);
 
     std::vector<Shape> new_shapes;
+    new_shapes.reserve(100);
     //For each X in the matrix check top, down, left, right
+    int cnt = 0;
     for(int i = 0; i < n; i++)
     {
         for(int j = 0; j < n; j++)
         {
             if(cmp_shape.array[i][j] == 'X')
             {
+                cnt++;
                 //Top
                 int down = cmp_shape.shift_down();
                 if (cmp_shape.array[i + down - 1][j] == ' ')
@@ -565,6 +568,8 @@ std::vector<Shape> Shape::extend()
                     }
                 }
             }
+
+            if(cnt == n * 2) break;
         }
     }
 
