@@ -5,7 +5,7 @@ CharArray::CharArray(int n) : n{n}
 {
     ptr = std::unique_ptr<char[]>(new char[n*n]);
     for(int i = 0; i < n*n; i++)
-        ptr[i] = 'O';
+        ptr[i] = ' ';
 }
 
 CharArray::CharArray(int n, const CharArray& rhs) : CharArray{n}
@@ -19,8 +19,10 @@ CharArray::CharArray(int n, const CharArray& rhs) : CharArray{n}
     }
 }
 
-CharArray::CharArray(const CharArray& rhs) : CharArray{n}
+CharArray::CharArray(const CharArray& rhs) : n{rhs.n}
 {
+    ptr = std::unique_ptr<char[]>(new char[n*n]);
+
     //Cant use operator= because of const in operator[]...
     for(int i = 0; i < n*n; i++)
     {
@@ -46,11 +48,26 @@ char* CharArray::operator[] (int row)
     return ptr.get() + row*n;
 }
 
-Shape::Shape(int n) : n{n}, array{n} {}
+Shape::Shape(int n, bool init) : n{n}, array{n}
+{
+    if(init)
+    {
+        array[0][0] = 'X';
+        array[0][1] = 'X';
+    }
+}
 
 Shape::Shape(int n, const Shape& rhs) : n{n}, array{n, rhs.array} {}
 
 Shape::Shape(const Shape& rhs) : n{rhs.n}, array{rhs.array} {}
+
+Shape& Shape::operator= (Shape& rhs)
+{
+    n = rhs.n;
+    array = rhs.array;
+
+    return *this;
+}
 
 //Parameter is not const because of the usage of operator[]
 bool Shape::operator== (Shape& rhs)
@@ -180,7 +197,7 @@ int Shape::shift_right()
         //Shift every column but the last to the right by one
         for(int i = 0; i < n; i++)
         {
-            for(int j = 1; j < n; j++)
+            for(int j = n -1; j > 0; j--)
             {
                 array[i][j] = array[i][j - 1];
             }
@@ -204,7 +221,7 @@ int Shape::shift_down()
     while (this->last_row_empty())
     {
         //Shift every line but the last up by one
-        for(int i = 1; i < n; i++)
+        for(int i = n - 1; i > cnt; i--)
         {
             for(int j = 0; j < n; j++)
             {
@@ -215,7 +232,7 @@ int Shape::shift_down()
         //Fill the first row with ' '
         for(int i = 0; i < n; i++)
         {
-            array[0][i] = ' ';
+            array[cnt][i] = ' ';
         }
 
         cnt++;
@@ -242,6 +259,8 @@ Shape& Shape::rotate()
     }
 
     array = tmp;
+
+    this->shift_top_left();
 
     return *this;
 }
@@ -290,10 +309,14 @@ std::vector<Shape> Shape::extend()
                         Shape new_shape(cmp_shape);
                         new_shape.array[i + down -1][j + right -1] = 'X';
                         new_shape.array[i + down -1][j + right] = 'X';
+                        new_shape.shift_top_left();
 
                         if(!this->has_hole() &&
-                           !this->exists(new_shapes))
+                           !new_shape.exists(new_shapes))
+                        {
+                            new_shape.shift_top_left();
                             new_shapes.push_back(new_shape);
+                        }
                     }
 
                     //Horizontal_2
@@ -305,10 +328,14 @@ std::vector<Shape> Shape::extend()
                         Shape new_shape(cmp_shape);
                         new_shape.array[i + down -1][j + 1] = 'X';
                         new_shape.array[i + down -1][j] = 'X';
+                        new_shape.shift_top_left();
 
                         if(!this->has_hole() &&
-                           !this->exists(new_shapes))
+                           !new_shape.exists(new_shapes))
+                        {
+                            new_shape.shift_top_left();
                             new_shapes.push_back(new_shape);
+                        }
                     }
 
                     //Vertical
@@ -320,10 +347,14 @@ std::vector<Shape> Shape::extend()
                         Shape new_shape(cmp_shape);
                         new_shape.array[i + down -2][j] = 'X';
                         new_shape.array[i + down -1][j] = 'X';
+                        new_shape.shift_top_left();
 
                         if(!this->has_hole() &&
-                           !this->exists(new_shapes))
+                           !new_shape.exists(new_shapes))
+                        {
+                            new_shape.shift_top_left();
                             new_shapes.push_back(new_shape);
+                        }
                     }
                 }
 
@@ -340,10 +371,14 @@ std::vector<Shape> Shape::extend()
                         Shape new_shape(cmp_shape);
                         new_shape.array[i + 1][j + right -1] = 'X';
                         new_shape.array[i + 1][j + right] = 'X';
+                        new_shape.shift_top_left();
 
                         if(!this->has_hole() &&
-                           !this->exists(new_shapes))
+                           !new_shape.exists(new_shapes))
+                         {
+                            new_shape.shift_top_left();
                             new_shapes.push_back(new_shape);
+                        }
                     }
 
                     cmp_shape.shift_left(); //Should restore j
@@ -355,10 +390,14 @@ std::vector<Shape> Shape::extend()
                         Shape new_shape(cmp_shape);
                         new_shape.array[i+1][j+1] = 'X';
                         new_shape.array[i+1][j] = 'X';
+                        new_shape.shift_top_left();
 
                         if(!this->has_hole() &&
-                           !this->exists(new_shapes))
+                           !new_shape.exists(new_shapes))
+                        {
+                            new_shape.shift_top_left();
                             new_shapes.push_back(new_shape);
+                        }
                     }
 
                     //Vertical
@@ -370,10 +409,14 @@ std::vector<Shape> Shape::extend()
                         Shape new_shape(cmp_shape);
                         new_shape.array[i+1][j] = 'X';
                         new_shape.array[i+2][j] = 'X';
+                        new_shape.shift_top_left();
 
                         if(!this->has_hole() &&
-                           !this->exists(new_shapes))
+                           !new_shape.exists(new_shapes))
+                        {
+                            new_shape.shift_top_left();
                             new_shapes.push_back(new_shape);
+                        }
                     }
                 }
 
@@ -390,10 +433,14 @@ std::vector<Shape> Shape::extend()
                         Shape new_shape(cmp_shape);
                         new_shape.array[i + down -1][j + right -1] = 'X';
                         new_shape.array[i + down][j + right -1] = 'X';
+                        new_shape.shift_top_left();
 
                         if(!this->has_hole() &&
-                           !this->exists(new_shapes))
+                           !new_shape.exists(new_shapes))
+                        {
+                            new_shape.shift_top_left();
                             new_shapes.push_back(new_shape);
+                        }
                     }
 
                     //Vertical_2
@@ -405,10 +452,14 @@ std::vector<Shape> Shape::extend()
                         Shape new_shape(cmp_shape);
                         new_shape.array[i + 1][j + right -1] = 'X';
                         new_shape.array[i][j + right -1] = 'X';
+                        new_shape.shift_top_left();
 
                         if(!this->has_hole() &&
-                           !this->exists(new_shapes))
+                           !new_shape.exists(new_shapes))
+                        {
+                            new_shape.shift_top_left();
                             new_shapes.push_back(new_shape);
+                        }
                     }
 
                     //Horizontal
@@ -418,10 +469,14 @@ std::vector<Shape> Shape::extend()
                         Shape new_shape(cmp_shape);
                         new_shape.array[i][j + right -2] = 'X';
                         new_shape.array[i][j + right -1] = 'X';
+                        new_shape.shift_top_left();
 
                         if(!this->has_hole() &&
-                           !this->exists(new_shapes))
+                           !new_shape.exists(new_shapes))
+                        {
+                            new_shape.shift_top_left();
                             new_shapes.push_back(new_shape);
+                        }
                     }
                 }
 
@@ -438,10 +493,14 @@ std::vector<Shape> Shape::extend()
                         Shape new_shape(cmp_shape);
                         new_shape.array[i + down -1][j + 1] = 'X';
                         new_shape.array[i + down][j + 1] = 'X';
+                        new_shape.shift_top_left();
 
                         if(!this->has_hole() &&
-                           !this->exists(new_shapes))
+                           !new_shape.exists(new_shapes))
+                        {
+                            new_shape.shift_top_left();
                             new_shapes.push_back(new_shape);
+                        }
                     }
 
                     //Vertical_2
@@ -453,10 +512,14 @@ std::vector<Shape> Shape::extend()
                         Shape new_shape(cmp_shape);
                         new_shape.array[i + 1][j + 1] = 'X';
                         new_shape.array[i][j + 1] = 'X';
+                        new_shape.shift_top_left();
 
                         if(!this->has_hole() &&
-                           !this->exists(new_shapes))
+                           !new_shape.exists(new_shapes))
+                        {
+                            new_shape.shift_top_left();
                             new_shapes.push_back(new_shape);
+                        }
                     }
 
                     //Horizontal
@@ -466,10 +529,14 @@ std::vector<Shape> Shape::extend()
                         Shape new_shape(cmp_shape);
                         new_shape.array[i][j + 1] = 'X';
                         new_shape.array[i][j + 2] = 'X';
+                        new_shape.shift_top_left();
 
                         if(!this->has_hole() &&
-                           !this->exists(new_shapes))
+                           !new_shape.exists(new_shapes))
+                        {
+                            new_shape.shift_top_left();
                             new_shapes.push_back(new_shape);
+                        }
                     }
                 }
             }
@@ -495,7 +562,7 @@ bool Shape::exists(std::vector<Shape>& vec)
 {
     for(auto s: vec)
     {
-        if(s == *this) return true;
+        if(this->equals(s)) return true;
     }
 
     return false;

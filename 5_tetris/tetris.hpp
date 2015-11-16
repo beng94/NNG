@@ -34,11 +34,11 @@ class Shape
 
     public:
         Shape() = delete;
-        Shape(int);
+        Shape(int, bool);
         Shape(int, const Shape&);
         Shape(const Shape&);
 
-        Shape& operator= (const Shape&);
+        Shape& operator= (Shape&);
         bool operator== (Shape&);
         void shift_top_left();
         void print();

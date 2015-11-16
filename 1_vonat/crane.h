@@ -21,11 +21,23 @@ public:
 
 	void sort();
 
-	std::pair<int, int> findbestchange_front();
+	void islandsort(int, int);
+
+	/*std::pair<int, int> findbestchange_front();
 
 	std::pair<int, int> findbestchange_back();
 
-	std::pair<int, int> findbestchange_full();
+	std::pair<int, int> findbestchange_full();*/
+
+	std::pair<int, int> findbestchange_front(int, int);
+
+	std::pair<int, int> findbestchange_back(int, int);
+
+	std::pair<int, int> findbestchange_full(int, int);
+
+	std::vector<int> findisland(std::string, int, int, int, int);
+
+	bool islandisvalid(std::string, int, int);
 
 	std::string stringflip(std::string, int, int);
 
