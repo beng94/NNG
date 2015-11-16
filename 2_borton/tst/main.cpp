@@ -1,7 +1,8 @@
 #include <vector>
 #include <iostream>
+#include <algorithm>
 
-const int N = 65;
+const int N = 500;
 
 class Group
 {
@@ -17,7 +18,7 @@ class Group
                 {
                     int a = nums[i];
                     int b = nums[j];
-                    if(nums.find(a+b))
+                    if(std::find(nums.begin(), nums.end(), a+b) != nums.end())
                     {
                         array[a]++;
                         array[b]++;
@@ -88,8 +89,6 @@ class Prison
                 {
                      id++;
                 }
-                get_results();
-                getchar();
             }
         }
 
@@ -110,9 +109,11 @@ class Prison
 int main()
 {
     std::vector<int> nums;
-    for(int i = 1; i <= 65; i++)
+    for(int i = 1; i <= 500; i++)
+    {
         nums.push_back(i);
-
+        nums.push_back(i);
+    }
     Prison p(nums);
     p.sort();
     p.get_results();
